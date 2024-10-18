@@ -1,9 +1,9 @@
-const registerUser = async(req,res) =>{
+const register = async(req,res) =>{
 
 }
 
-const loginUser = async(req,res) =>{
+const login = async(req,res) =>{
 
 }
 
-module.exports = {registerUser,loginUser}
+module.exports = {register,login}
