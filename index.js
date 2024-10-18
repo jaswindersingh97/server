@@ -17,6 +17,9 @@ app.get("/HelloWorld",(req,res)=>{
     res.send("hello World")
 });
 
+const AuthRoutes = require('./endpoints/AuthRoutes');
+app.use("/auth",AuthRoutes);
+
 const port = process.env.PORT;
 
 app.listen(port,()=>{
