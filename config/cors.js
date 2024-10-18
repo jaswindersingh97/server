@@ -1,9 +1,8 @@
 const cors = require('cors');
-const domain = process.env.DOMAIN;
 // Allowed origins
 const allowedOrigins = [
     "http://localhost:5173",  // Add your frontend domain here
-    domain  // Additional domains can be added
+    'https://pro-manage-lilac.vercel.app'  // Additional domains can be added
 ];
 
 const corsOptions = {
