@@ -1,11 +1,10 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const handleAsync = require('./handleAsync');
 
 const User = require('./../models/UserModel');
 
-const register = handleAsync(async(req,res) => {
+const register = async(req,res) => {
     const {name,email,password} = req.body;
 
     const existingUser = await User.findOne({ email });
@@ -18,9 +17,9 @@ const register = handleAsync(async(req,res) => {
 
     const response = await User.create({ name, email, password: hashedPassword });
     res.status(201).json({Message:"user Created successfully",_id:response._id}); // 201 Created
-});
+};
 
-const login = handleAsync(async(req,res) =>{
+const login = async(req,res) =>{
     const { email , password } = req.body;
         
     const user = await User.findOne({email}).select("+password");
@@ -41,6 +40,6 @@ const login = handleAsync(async(req,res) =>{
         {expiresIn:"8h"}
     );
     res.status(200).json({token:token,message:"Login successfull"});
-});
+};
 
 module.exports = {register,login}

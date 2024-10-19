@@ -20,6 +20,9 @@ app.get("/HelloWorld",(req,res)=>{
 const AuthRoutes = require('./endpoints/AuthRoutes');
 app.use("/auth",AuthRoutes);
 
+const AuthMiddleware = require('./middlewares/AuthMiddleware');
+const SecureRoutes = require('./endpoints/SecureRoutes');
+app.use("/secure",AuthMiddleware,SecureRoutes);
 const port = process.env.PORT;
 
 app.listen(port,()=>{
