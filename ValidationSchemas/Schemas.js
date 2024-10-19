@@ -28,5 +28,22 @@ const schemas ={
             assignedTo: Joi.array().items(Joi.string().hex().length(24)).optional(),  // Array of user IDs, optional
           }),
         },    
+    updateStatus:{
+      body:Joi.object({
+        TaskId:Joi.string().hex().length(24).required(),
+        currentStatus:Joi.number().required()
+      }),
+    },
+    updateChecklist:{
+      body:Joi.object({
+        TaskId:Joi.string().hex().length(24).required(),
+        checklist: Joi.array().items(
+              Joi.object({
+                task: Joi.string().required(),  
+                completed: Joi.boolean().default(false)  
+              })
+            ).min(1).required(),
+      }),
+    },
 };
 module.exports = schemas;

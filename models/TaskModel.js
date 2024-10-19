@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Define the Task schema
 const taskSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -29,6 +28,15 @@ const taskSchema = new mongoose.Schema({
     type: Number,
     enum: [1, 2, 3, 4],  // 1: To-Do, 2: Backlog, 3: In-Progress, 4: Done
     default: 1,  // Default to 'To-Do'
+  },
+  visibleTo: {
+    type: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }],
+    default: function() {
+      return [this.createdBy];  // Default to the creator
+    }
   },
   assignedTo: [{
     type: mongoose.Schema.Types.ObjectId,  
