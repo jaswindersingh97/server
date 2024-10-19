@@ -3,7 +3,9 @@ const router = express.Router();
 
 const handleAsync = require('./../helperfunction/handleAsync');
 const ValidationMiddleware = require('../middlewares/ValidationMiddleware');
-const { createTask } = require('../controller/SecureController');
+const { getCurrentUser,createTask } = require('../controller/SecureController');
+
+router.get("/getUser",handleAsync(getCurrentUser))
 
 router.post("/createTask",ValidationMiddleware("createTask"),handleAsync(createTask));
 
