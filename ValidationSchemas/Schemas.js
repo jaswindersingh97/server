@@ -48,7 +48,12 @@ const schemas ={
     shareTask:{             //public route
       params: Joi.object({
         TaskId:Joi.string().hex().length(24).required(),
-      })
+      }),
+    },
+    shareBoard:{
+      body: Joi.object({
+        sharedWith: Joi.string().hex().length(24).required(),
+      }),
     },
 
 };

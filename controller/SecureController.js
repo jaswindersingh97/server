@@ -50,6 +50,21 @@ const getTasks = async (req,res) =>{
     const response = await Task.find({visibleTo: { $in: [userId] }});
       
     return res.status(200).json({message:"Tasks fetched succefully",response});
-}
+};
+const shareBoard = async (req,res) =>{
+    const {userId} = req.user;
+    const {sharedWith} = req.body;
 
-module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks}
+    const response = await Task.updateMany(
+        { visibleTo: { $in: [userId] } },  
+        { $addToSet: { visibleTo: sharedWith } }  
+      );
+
+      if (response.modifiedCount > 0) {
+        res.status(200).json({ message: 'Tasks updated successfully',response });
+      } else {
+        res.status(404).json({ message: 'No tasks found to update', response });
+      }
+};
+
+module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks,shareBoard}
