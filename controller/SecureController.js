@@ -47,7 +47,7 @@ const updateChecklist = async(req,res) =>{  // can be used for both updating the
 
 const getTasks = async (req,res) =>{
     const {userId} = req.user;
-    const response = await Task.findOne({visibleTo: { $in: [userId] }});
+    const response = await Task.find({visibleTo: { $in: [userId] }});
       
     return res.status(200).json({message:"Tasks fetched succefully",response});
 }
