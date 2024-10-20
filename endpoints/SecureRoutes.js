@@ -14,18 +14,18 @@ const {
     deleteTask
     } = require('../controller/SecureController');
 
-const { queryMiddleware } = require('../ValidationSchemas/Schemas');
+const queryHandler  = require('./../middlewares/queryMiddleware');
 
 // user based routes
 router.get("/getUser",handleAsync(getCurrentUser));
 router.get("/searchUser",ValidationMiddleware("searchUser"),handleAsync(searchUser));
 
 //Task based routes
-router.get("/getTasks",ValidationMiddleware("queryMiddleware"),queryMiddleware,handleAsync(getTasks));
+router.get("/getTasks",ValidationMiddleware("queryMiddleware"),queryHandler,handleAsync(getTasks));
 router.post("/createTask",ValidationMiddleware("createTask"),handleAsync(createTask));
 router.patch("/updateStatus",ValidationMiddleware("updateStatus"),handleAsync(changeStatus));
 router.patch("/updateChecklist",ValidationMiddleware("updateChecklist"),handleAsync(updateChecklist));
-router.delete("/deleteTask:TaskId",ValidationMiddleware("deleteTask"),handleAsync(deleteTask));
+router.delete("/deleteTask/:TaskId",ValidationMiddleware("deleteTask"),handleAsync(deleteTask));
 
 //ShareBoard with user
 router.patch("/shareBoard",ValidationMiddleware("shareBoard"),handleAsync(shareBoard));
