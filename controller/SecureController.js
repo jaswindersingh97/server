@@ -73,5 +73,18 @@ const shareBoard = async (req,res) =>{
         res.status(404).json({ message: 'No tasks found to update', response });
       }
 };
+const searchUser = async(req,res)=>{
+    const {email} = req.query;
+    const users = await User.find({ email: { $regex: email, $options: 'i' } });
+    res.status(200).json(users);
+}
+const deleteTask = async(req,res)=>{
+    const {TaskId} = req.params;
+    const task = await Task.findByIdAndDelete(TaskId);
+    if (!task) {
+        return res.status(404).json({ message: 'Task not found' });
+    }
+    res.status(200).json({ message: 'Task deleted successfully' });
 
-module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks,shareBoard}
+}
+module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks,shareBoard,searchUser,deleteTask}

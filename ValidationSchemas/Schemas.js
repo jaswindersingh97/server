@@ -60,8 +60,18 @@ const schemas ={
       filterBy: Joi.string().valid('day', 'week', 'month').optional(),
       sortBy: Joi.string().valid('created', 'updated').default('created'),  
       order: Joi.string().valid('asc', 'desc').default('desc'),  
-    }),
-  },
+      }),
+    },
+    searchUser:{
+      query:Joi.object({
+        email:Joi.string().email().required(),
+      }),
+    },
+    deleteTask:{
+      params:Joi.object({
+        TaskId:Joi.string().hex().length(24).required(),
+      }),
+    },
 
 };
 module.exports = schemas;
