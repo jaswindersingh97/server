@@ -45,5 +45,11 @@ const schemas ={
             ).min(1).required(),
       }),
     },
+    shareTask:{             //public route
+      params: Joi.object({
+        TaskId:Joi.string().hex().length(24).required(),
+      })
+    },
+
 };
 module.exports = schemas;

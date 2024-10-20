@@ -29,15 +29,10 @@ const taskSchema = new mongoose.Schema({
     enum: [1, 2, 3, 4],  // 1: To-Do, 2: Backlog, 3: In-Progress, 4: Done
     default: 1,  // Default to 'To-Do'
   },
-  visibleTo: {
-    type: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    }],
-    default: function() {
-      return [this.createdBy];  // Default to the creator
-    }
-  },
+  visibleTo: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
   assignedTo: [{
     type: mongoose.Schema.Types.ObjectId,  
     ref: 'User',
@@ -57,6 +52,48 @@ const taskSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true
+});
+
+// Pre-save hook to ensure visibleTo contains createdBy and assignedTo on creation
+taskSchema.pre('save', function (next) {
+  // Ensure visibleTo contains createdBy
+  if (!this.visibleTo || this.visibleTo.length === 0) {
+    this.visibleTo = [this.createdBy];
+  }
+
+  // Ensure all assignedTo users are in visibleTo
+  this.assignedTo.forEach(user => {
+    if (!this.visibleTo.includes(user)) {
+      this.visibleTo.push(user);
+    }
+  });
+
+  next();
+});
+
+// Pre-update hook to automatically update visibleTo when assignedTo changes
+taskSchema.pre('findOneAndUpdate', async function (next) {
+  const update = this.getUpdate();
+
+  // If the assignedTo field is being updated
+  if (update.assignedTo) {
+    // Get the current task being updated
+    const task = await this.model.findOne(this.getQuery());
+
+    // Ensure createdBy is included in visibleTo
+    const updatedVisibleTo = new Set(task.visibleTo.map(user => user.toString()));
+    updatedVisibleTo.add(task.createdBy.toString());
+
+    // Ensure newly assigned users are added to visibleTo
+    update.assignedTo.forEach(user => {
+      updatedVisibleTo.add(user.toString());
+    });
+
+    // Update the visibleTo field
+    update.visibleTo = Array.from(updatedVisibleTo);
+  }
+
+  next();
 });
 
 const Task = mongoose.model('Task', taskSchema);
