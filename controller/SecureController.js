@@ -46,10 +46,17 @@ const updateChecklist = async(req,res) =>{  // can be used for both updating the
 }
 
 const getTasks = async (req,res) =>{
-    const {userId} = req.user;
-    const response = await Task.find({visibleTo: { $in: [userId] }});
-      
-    return res.status(200).json({message:"Tasks fetched succefully",response});
+    const { userId } = req.user;
+    const response = await Task.find({
+        visibleTo: { $in: [userId] },
+        ...req.dateFilter
+      }).sort(req.sortOption);  
+  
+      if (response.length > 0) {
+        res.status(200).json({message:'Tasks fetched successfully ',response});
+      } else {
+        res.status(404).json({ message: 'No tasks found',response });
+      }
 };
 const shareBoard = async (req,res) =>{
     const {userId} = req.user;

@@ -55,6 +55,13 @@ const schemas ={
         sharedWith: Joi.string().hex().length(24).required(),
       }),
     },
+    queryMiddleware:{
+      query:Joi.object({
+      filterBy: Joi.string().valid('day', 'week', 'month').optional(),
+      sortBy: Joi.string().valid('created', 'updated').default('created'),  
+      order: Joi.string().valid('asc', 'desc').default('desc'),  
+    }),
+  },
 
 };
 module.exports = schemas;
