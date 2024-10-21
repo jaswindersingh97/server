@@ -11,7 +11,8 @@ const {
     getTasks,
     shareBoard,
     searchUser,
-    deleteTask
+    deleteTask,
+    tickChecklist
     } = require('../controller/SecureController');
 
 const queryHandler  = require('./../middlewares/queryMiddleware');
@@ -25,6 +26,7 @@ router.get("/getTasks",ValidationMiddleware("queryMiddleware"),queryHandler,hand
 router.post("/createTask",ValidationMiddleware("createTask"),handleAsync(createTask));
 router.patch("/updateStatus",ValidationMiddleware("updateStatus"),handleAsync(changeStatus));
 router.patch("/updateChecklist",ValidationMiddleware("updateChecklist"),handleAsync(updateChecklist));
+router.patch("/tickChecklist",ValidationMiddleware("tickChecklist"),handleAsync(tickChecklist))
 router.delete("/deleteTask/:TaskId",ValidationMiddleware("deleteTask"),handleAsync(deleteTask));
 
 //ShareBoard with user

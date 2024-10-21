@@ -25,9 +25,9 @@ const createTask = async (req, res) => {
 };
 
 const changeStatus = async(req,res) =>{
-    const {TaskId, currentStatus} = req.body;
+    const {TaskId, Status} = req.body;
     const response = await Task.findByIdAndUpdate(TaskId,
-        {status:currentStatus}, {new:true});  
+        {status:Status}, {new:true});  
     if(!response){
         return res.status(404).json({error:"TaskId is wrong"});
     }
@@ -87,4 +87,21 @@ const deleteTask = async(req,res)=>{
     res.status(200).json({ message: 'Task deleted successfully' });
 
 }
-module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks,shareBoard,searchUser,deleteTask}
+
+const tickChecklist = async(req,res)=>{
+    const {taskId,checklistItemId} = req.body;
+    const task = await Task.findOne({
+        _id: taskId,
+        "checklist._id": checklistItemId
+      });
+  
+      if (!task) {
+        throw new Error("Task or checklist item not found");
+      }
+      const checklistItem = task.checklist.id(checklistItemId);
+      checklistItem.completed = !checklistItem.completed;
+
+      await task.save();
+      return res.status(200).json({message:"The item updated successfully",task})
+};
+module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks,shareBoard,searchUser,deleteTask,tickChecklist}

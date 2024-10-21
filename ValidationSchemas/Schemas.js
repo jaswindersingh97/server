@@ -31,7 +31,7 @@ const schemas ={
     updateStatus:{
       body:Joi.object({
         TaskId:Joi.string().hex().length(24).required(),
-        currentStatus:Joi.number().required()
+        Status:Joi.number().required()
       }),
     },
     updateChecklist:{
@@ -70,6 +70,12 @@ const schemas ={
     deleteTask:{
       params:Joi.object({
         TaskId:Joi.string().hex().length(24).required(),
+      }),
+    },
+    tickChecklist:{
+      body:Joi.object({
+        taskId:Joi.string().hex().length(24).required(),
+        checklistItemId:Joi.string().hex().length(24).required(),
       }),
     },
 
