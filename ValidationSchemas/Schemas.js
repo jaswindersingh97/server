@@ -74,8 +74,8 @@ const schemas ={
     },
     tickChecklist:{
       body:Joi.object({
-        taskId:Joi.string().hex().length(24).required(),
         checklistItemId:Joi.string().hex().length(24).required(),
+        status:Joi.boolean().required(),
       }),
     },
 

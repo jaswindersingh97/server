@@ -50,7 +50,8 @@ const getTasks = async (req,res) =>{
     const response = await Task.find({
         visibleTo: { $in: [userId] },
         ...req.dateFilter
-      }).sort(req.sortOption);  
+      }).populate("assignedTo")
+      .sort(req.sortOption);  
   
       if (response.length > 0) {
         res.status(200).json({message:'Tasks fetched successfully ',response});
@@ -89,9 +90,8 @@ const deleteTask = async(req,res)=>{
 }
 
 const tickChecklist = async(req,res)=>{
-    const {taskId,checklistItemId} = req.body;
+    const {checklistItemId,status} = req.body;
     const task = await Task.findOne({
-        _id: taskId,
         "checklist._id": checklistItemId
       });
   
@@ -99,7 +99,7 @@ const tickChecklist = async(req,res)=>{
         throw new Error("Task or checklist item not found");
       }
       const checklistItem = task.checklist.id(checklistItemId);
-      checklistItem.completed = !checklistItem.completed;
+      checklistItem.completed = status;
 
       await task.save();
       return res.status(200).json({message:"The item updated successfully",task})
