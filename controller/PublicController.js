@@ -1,9 +1,9 @@
 const Task = require("../models/TaskModel");
 
-const shareTask = async(req,res)=>{
+const getTask = async(req,res)=>{
     const {TaskId} = req.params;
 
-    const response = await Task.findOne({_id:TaskId})
+    const response = await Task.findOne({_id:TaskId}).select('checklist dueDate priority title')
 
     if(!response){
         return res.status(404).json({error:"The task not found"})

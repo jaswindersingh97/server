@@ -23,6 +23,9 @@ app.use("/auth",AuthRoutes);
 const AuthMiddleware = require('./middlewares/AuthMiddleware');
 const SecureRoutes = require('./endpoints/SecureRoutes');
 app.use("/secure",AuthMiddleware,SecureRoutes);
+
+const PublicRoutes = require('./endpoints/PublicRoutes');
+app.use("/public",PublicRoutes);
 const port = process.env.PORT;
 
 app.listen(port,()=>{
