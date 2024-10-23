@@ -18,14 +18,15 @@ const schemas ={
         body:Joi.object({
             title: Joi.string().max(100).required(),  
             priority: Joi.number().valid(1, 2, 3).required(),  
-            dueDate: Joi.date().optional(),
+            dueDate: Joi.alternatives().try(Joi.date().optional(), Joi.string().valid('').optional()).allow(null), // Allow empty string or null
             checklist: Joi.array().items(
               Joi.object({
                 task: Joi.string().required(),  
-                completed: Joi.boolean().default(false)  
+                completed: Joi.boolean().default(false),
+                _id:Joi.string().optional()  
               })
             ).min(1).required(),  // Checklist must contain at least one item and is required
-            assignedTo: Joi.array().items(Joi.string().hex().length(24)).optional(),  // Array of user IDs, optional
+            assignedTo: Joi.alternatives().try(Joi.array().items(Joi.string().hex().length(24)).optional(), Joi.string().valid('').optional()).allow(null), // Allow empty string, array, or null
           }),
         },    
     updateStatus:{
@@ -40,7 +41,7 @@ const schemas ={
         checklist: Joi.array().items(
               Joi.object({
                 task: Joi.string().required(),  
-                completed: Joi.boolean().default(false)  
+                completed: Joi.boolean().default(false),
               })
             ).min(1).required(),
       }),
@@ -78,6 +79,29 @@ const schemas ={
         status:Joi.boolean().required(),
       }),
     },
+    editTask: {
+      params: Joi.object({
+        TaskId: Joi.string().hex().length(24).required(),
+      }),
+      body: Joi.object({
+        title: Joi.string().max(100).required(),
+        priority: Joi.number().valid(1, 2, 3).required(),
+        dueDate: Joi.alternatives().try(Joi.date().optional(), Joi.string().valid('').optional()).allow(null), // Allow empty string or null
+        checklist: Joi.array().items(
+          Joi.object({
+            task: Joi.string().required(),
+            completed: Joi.boolean().default(false),
+            _id: Joi.string().hex().length(24).optional(), // Optional _id for editing
+          })
+        ).min(1).required(),
+        assignedTo: Joi.array().items(
+          Joi.alternatives().try(
+            Joi.string().hex().length(24), // Valid hex string for user IDs
+            Joi.string().valid(''), // Allow empty strings in the array
+            Joi.allow(null) // Allow null in the array
+          )
+        ).optional(),      }),
+    }
 
 };
 module.exports = schemas;

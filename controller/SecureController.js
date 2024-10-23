@@ -104,4 +104,15 @@ const tickChecklist = async(req,res)=>{
       await task.save();
       return res.status(200).json({message:"The item updated successfully",task})
 };
-module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks,shareBoard,searchUser,deleteTask,tickChecklist}
+
+const editTask = async(req,res)=>{
+    const {TaskId} = req.params;
+    const {assignedTo,checklist,dueDate,priority,title}= req.body;
+
+    const response = await Task.findByIdAndUpdate(TaskId,
+        {assignedTo,checklist,dueDate,priority,title},
+        {new:true}
+    )
+    res.status(200).json({message:"The task updated successfully",response});
+}
+module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks,shareBoard,searchUser,deleteTask,tickChecklist,editTask}
