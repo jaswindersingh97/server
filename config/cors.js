@@ -3,8 +3,8 @@ const cors = require('cors');
 const allowedOrigins = [
     "http://localhost:5173",
     'https://pro-manage-lilac.vercel.app',
-    'https://pro-manage-git-main-jaswinder-singhs-projects-b0479f6f.vercel.app/',
-    'https://pro-manage-kwg50xign-jaswinder-singhs-projects-b0479f6f.vercel.app/'
+    'https://pro-manage-git-main-jaswinder-singhs-projects-b0479f6f.vercel.app',
+    'https://pro-manage-kwg50xign-jaswinder-singhs-projects-b0479f6f.vercel.app'
 
 ];
 
