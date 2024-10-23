@@ -1,8 +1,11 @@
 const cors = require('cors');
 // Allowed origins
 const allowedOrigins = [
-    "http://localhost:5173",  // Add your frontend domain here
-    'https://pro-manage-lilac.vercel.app'  // Additional domains can be added
+    "http://localhost:5173",
+    'https://pro-manage-lilac.vercel.app',
+    'https://pro-manage-git-main-jaswinder-singhs-projects-b0479f6f.vercel.app/',
+    'https://pro-manage-kwg50xign-jaswinder-singhs-projects-b0479f6f.vercel.app/'
+
 ];
 
 const corsOptions = {
