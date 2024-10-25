@@ -13,7 +13,8 @@ const {
     searchUser,
     deleteTask,
     tickChecklist,
-    editTask
+    editTask,
+    updateUser
     } = require('../controller/SecureController');
 
 const queryHandler  = require('./../middlewares/queryMiddleware');
@@ -21,6 +22,7 @@ const queryHandler  = require('./../middlewares/queryMiddleware');
 // user based routes
 router.get("/getUser",handleAsync(getCurrentUser));
 router.get("/searchUser",ValidationMiddleware("searchUser"),handleAsync(searchUser));
+router.patch("/updateUser",ValidationMiddleware("updateUser"),handleAsync(updateUser));
 
 //Task based routes
 router.get("/getTasks",ValidationMiddleware("queryMiddleware"),queryHandler,handleAsync(getTasks));

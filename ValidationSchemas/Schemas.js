@@ -100,8 +100,16 @@ const schemas ={
             Joi.string().valid(''), // Allow empty strings in the array
             Joi.allow(null) // Allow null in the array
           )
-        ).optional(),      }),
-    }
-
+        ).optional(),      
+      }),
+    },
+    updateUser:{
+      body:Joi.object({
+        name:Joi.string().min(3).optional(),
+        email:Joi.string().email().optional(),
+        oldPassword:Joi.string().min(6).optional(),
+        newPassword:Joi.string().min(6).optional(),
+      }),
+    },
 };
 module.exports = schemas;

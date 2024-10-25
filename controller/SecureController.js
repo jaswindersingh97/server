@@ -1,6 +1,6 @@
 const User = require('./../models/UserModel');
 const Task = require('./../models/TaskModel');
-
+const bcrypt = require('bcrypt');
 const getCurrentUser =async(req,res)=>{
     const {userId} = req.user;
     const user = await User.findOne({_id:userId})
@@ -115,4 +115,36 @@ const editTask = async(req,res)=>{
     )
     res.status(200).json({message:"The task updated successfully",response});
 }
-module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks,shareBoard,searchUser,deleteTask,tickChecklist,editTask}
+
+const updateUser = async (req, res) => {
+    const { userId } = req.user; 
+    const { name, email, oldPassword, newPassword } = req.body;
+    const updateFields = {};
+
+    if (name) updateFields.name = name;
+    if (email) updateFields.email = email;
+
+    if (!oldPassword && !newPassword) {
+        if (Object.keys(updateFields).length === 0) {
+            return res.status(400).json({ error: "No fields to update." });
+        }
+
+        const response = await User.findByIdAndUpdate(userId, updateFields, { new: true });
+        return res.status(200).json({ message: "Data updated successfully", user: response });
+    }
+    const user = await User.findById(userId).select('+password');
+    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isPasswordValid) {
+        return res.status(400).json({ error: "The old password is incorrect. Please try again." });
+    }
+    if (newPassword) {
+        updateFields.password = await bcrypt.hash(newPassword, 10); 
+    }
+
+    const response = await User.findByIdAndUpdate(userId, updateFields, { new: true });
+    return res.status(200).json({ message: "User updated successfully", user: response });
+};
+
+
+module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks,shareBoard,searchUser,deleteTask,tickChecklist,editTask,updateUser}
