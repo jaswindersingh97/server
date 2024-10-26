@@ -13,15 +13,16 @@ const createTask = async (req, res) => {
     const { userId } = req.user;
     const { title, priority, assignedTo, checklist, dueDate } = req.body;
 
-    const response = await Task.create({
+    const newTask = await Task.create({
         title,
         priority,
         checklist,
         assignedTo,
         dueDate,
         createdBy: userId  
-    });
-
+      });
+      
+    const response = await Task.findById(newTask._id).populate('assignedTo');
     return res.status(201).json({ message: "Task created successfully", response });
 };
 
@@ -113,7 +114,7 @@ const editTask = async(req,res)=>{
     const response = await Task.findByIdAndUpdate(TaskId,
         {assignedTo,checklist,dueDate,priority,title},
         {new:true}
-    )
+    ).populate('assignedTo')
     res.status(200).json({message:"The task updated successfully",response});
 }
 
