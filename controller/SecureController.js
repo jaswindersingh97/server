@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const User = require('./../models/UserModel');
 const Task = require('./../models/TaskModel');
 const bcrypt = require('bcrypt');
@@ -146,5 +147,40 @@ const updateUser = async (req, res) => {
     return res.status(200).json({ message: "User updated successfully", user: response });
 };
 
-
-module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks,shareBoard,searchUser,deleteTask,tickChecklist,editTask,updateUser}
+const Analytics = async(req,res)=>{
+    const {userId} = req.user;
+    const counts = await Task.aggregate([
+        {
+          $match: {
+            visibleTo: new mongoose.Types.ObjectId(userId),
+          }
+        },
+        {
+          $facet: {
+            statusCount: [{
+                $group: {
+                    _id: "$status",
+                    count: { $sum: 1 },
+                    }
+                }
+            ],
+            priorityCount: [{
+                $group: {
+                  _id: "$priority",
+                  count: { $sum: 1 },
+                    }
+                }
+            ],
+            dueDateCount: [{
+                $group: {
+                  _id: { $cond: [{ $ifNull: ["$dueDate", false] }, "hasDueDate", "noDueDate"] },
+                  count: { $sum: 1 },
+                    }
+                }
+            ]
+          }
+        }
+      ]);
+      res.status(200).json({message:"Count fetched successfully",counts});
+}
+module.exports = {getCurrentUser,createTask,changeStatus,updateChecklist,getTasks,shareBoard,searchUser,deleteTask,tickChecklist,editTask,updateUser,Analytics}
